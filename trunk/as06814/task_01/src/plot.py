@@ -9,9 +9,8 @@ def main():
     if not csv_files:
         print("CSV файлы не найдены! Сначала запустите task_01.exe")
         return
-
+        
     print(f"Обработка файлов: {csv_files}")
-
     models = ["linear", "nonlinear", "diff"]
     
     doc_dir = os.path.join("..", "doc")
@@ -33,16 +32,18 @@ def main():
             
             if signal_type == "step":
                 plt.plot(data["Time"], data["Input"], '--', color='gray', alpha=0.6, label="Input Step")
-
+                
         plt.title(f"Simulation Results: {model.capitalize()} Model (Variant 14)")
         plt.xlabel("Time step (t)")
         plt.ylabel("Value")
         plt.grid(True, linestyle="--", alpha=0.7)
         plt.legend()
-        
+
         output_img = os.path.join(doc_dir, f"{model}_plot.png")
         plt.savefig(output_img, dpi=300)
         print(f"График сохранен: {output_img}")
+        
+        plt.show()
         plt.close()
 
 if __name__ == "__main__":
