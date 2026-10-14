@@ -38,7 +38,10 @@ int main(int argc, char* argv[]) {
 
     if (argc > 1) {
         try {
-            steps = std::stoi(argv[1]);
+            int parsed = std::stoi(argv[1]);
+            if (parsed > 0 && parsed <= 10000) {
+                steps = parsed;
+            }
         } catch (...) {
             std::cerr << "Некорректный аргумент командной строки. Используется значение по умолчанию." << std::endl;
             steps = 100;
@@ -49,7 +52,10 @@ int main(int argc, char* argv[]) {
         std::getline(std::cin, input);
         if (!input.empty()) {
             try {
-                steps = std::stoi(input);
+                int parsed = std::stoi(input);
+                if (parsed > 0 && parsed <= 10000) {
+                    steps = parsed;
+                }
             } catch (...) {
                 std::cout << "Некорректный ввод. Будет использовано значение по умолчанию (100)." << std::endl;
                 steps = 100;

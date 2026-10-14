@@ -22,9 +22,9 @@ cmake --build .
 
 echo ===== Запуск симуляции C++ =====
 if exist task_01.exe (
-    task_01.exe 100
+    task_01.exe
 ) else if exist Release\task_01.exe (
-    Release\task_01.exe 100
+    Release\task_01.exe
 ) else (
     echo [ERROR] Исполняемый файл не найден.
     pause

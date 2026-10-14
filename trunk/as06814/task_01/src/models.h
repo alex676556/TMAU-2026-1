@@ -24,12 +24,12 @@ class LinearModel1_4 : public Model {
 private:
     double a;
     double b;
-    double y_curr;
-    double u_prev;
+    double y_curr = 0.0;
+    double u_prev = 0.0;
 
 public:
     LinearModel1_4(double a_val, double b_val)
-        : a(a_val), b(b_val), y_curr(0.0), u_prev(0.0) {}
+        : a(a_val), b(b_val) {}
 
     double calculateNext(double u) override {
         double y_next = a * y_curr + b * (u - u_prev);
@@ -49,12 +49,12 @@ private:
     double a;
     double b;
     double c;
-    double y_curr;
-    double y_prev;
+    double y_curr = 0.0;
+    double y_prev = 0.0;
 
 public:
     NonlinearModel2_8(double a_val, double b_val, double c_val)
-        : a(a_val), b(b_val), c(c_val), y_curr(0.0), y_prev(0.0) {}
+        : a(a_val), b(b_val), c(c_val) {}
 
     double calculateNext(double u) override {
         double y_next = a * y_curr * (1.0 - y_curr) + b * u + c * std::sin(y_prev * u);
@@ -73,11 +73,11 @@ class DiffModel3_2 : public Model {
 private:
     double b;
     double dt;
-    double y_curr;
+    double y_curr = 0.0;
 
 public:
-    DiffModel3_2(double b_val, double dt_val = 0.1)
-        : b(b_val), dt(dt_val), y_curr(0.0) {}
+    explicit DiffModel3_2(double b_val, double dt_val = 0.1)
+        : b(b_val), dt(dt_val) {}
 
     double calculateNext(double u) override {
         double y_next = y_curr + dt * b * u;
