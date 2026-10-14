@@ -3,10 +3,11 @@
 #include <fstream>
 #include <cmath>
 #include <string>
+#include <algorithm>
 #include "models.h"
 
 std::vector<double> generateInputSignal(int type, int steps) {
-    std::vector<double> u(steps, 0.0);
+    std::vector u(steps, 0.0);
     for (int t = 0; t < steps; ++t) {
         if (type == 1) {
             u[t] = 1.0;
@@ -34,17 +35,13 @@ void saveToCSV(const std::string& filename, const std::vector<double>& input, co
 }
 
 int main(int argc, char* argv[]) {
-    int steps = 100; 
+    int parsed_steps = 100; 
 
     if (argc > 1) {
         try {
-            int parsed = std::stoi(argv[1]);
-            if (parsed > 0 && parsed <= 10000) {
-                steps = parsed;
-            }
+            parsed_steps = std::stoi(argv[1]);
         } catch (...) {
-            std::cerr << "Некорректный аргумент командной строки. Используется значение по умолчанию." << std::endl;
-            steps = 100;
+            parsed_steps = 100;
         }
     } else {
         std::cout << "Введите количество шагов симуляции (n) [по умолчанию 100]: ";
@@ -52,21 +49,14 @@ int main(int argc, char* argv[]) {
         std::getline(std::cin, input);
         if (!input.empty()) {
             try {
-                int parsed = std::stoi(input);
-                if (parsed > 0 && parsed <= 10000) {
-                    steps = parsed;
-                }
+                parsed_steps = std::stoi(input);
             } catch (...) {
-                std::cout << "Некорректный ввод. Будет использовано значение по умолчанию (100)." << std::endl;
-                steps = 100;
+                parsed_steps = 100;
             }
         }
     }
 
-    if (steps <= 0) {
-        std::cerr << "Количество шагов должно быть больше 0! Установлено значение по умолчанию: 100." << std::endl;
-        steps = 100;
-    }
+    const int steps = std::clamp(parsed_steps, 1, 10000);
 
     std::cout << "Запуск симуляции для n = " << steps << " шагов...\n" << std::endl;
 
