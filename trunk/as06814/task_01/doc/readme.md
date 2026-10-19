@@ -56,14 +56,42 @@ $$\frac{dy}{dt} = b \cdot u \implies y_{\tau+1} = y_{\tau} + \Delta t \cdot b \c
 
 ## Результаты моделирования
 
-### 1. Переходные процессы линейной модели (Model 1.4)
-![Линейная модель](linear_plot.png)
+### 1. Линейная модель (Model 1.4)
 
-### 2. Переходные процессы нелинейной модели (Model 2.8)
-![Нелинейная модель](nonlinear_plot.png)
+#### 1.1 Ступенчатое воздействие
+![Linear Model - Step](linear_step.png)
 
-### 3. Переходные процессы дифференциальной модели (Model 3.2)
-![Дифференциальная модель](diff_plot.png)
+#### 1.2 Импульсное воздействие
+![Linear Model - Impulse](linear_impulse.png)
+
+#### 1.3 Гармоническое воздействие
+![Linear Model - Harmonic](linear_harmonic.png)
+
+---
+
+### 2. Нелинейная модель (Model 2.8)
+
+#### 2.1 Ступенчатое воздействие
+![Nonlinear Model - Step](nonlinear_step.png)
+
+#### 2.2 Импульсное воздействие
+![Nonlinear Model - Impulse](nonlinear_impulse.png)
+
+#### 2.3 Гармоническое воздействие
+![Nonlinear Model - Harmonic](nonlinear_harmonic.png)
+
+---
+
+### 3. Дифференциальная модель (Model 3.2)
+
+#### 3.1 Ступенчатое воздействие
+![Diff Model - Step](diff_step.png)
+
+#### 3.2 Импульсное воздействие
+![Diff Model - Impulse](diff_impulse.png)
+
+#### 3.3 Гармоническое воздействие
+![Diff Model - Harmonic](diff_harmonic.png)
 
 ## UML Диаграмма классов
 
