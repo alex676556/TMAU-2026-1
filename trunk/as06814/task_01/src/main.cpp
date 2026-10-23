@@ -47,14 +47,14 @@ void printAndSaveCSV(Model& model, const std::string& filename, const std::strin
               << std::setw(12) << "Output" << std::endl;
     std::cout << "------------------------------------------" << std::endl;
 
-    size_t print_limit = std::min(output.size(), static_cast<size_t>(20));
+    size_t print_limit = std::min(output.size(), static_cast<size_t>(100));
     for (size_t t = 0; t < print_limit; ++t) {
         std::cout << std::setw(8) << t << " | " 
                   << std::setw(10) << std::fixed << std::setprecision(4) << input[t] << " | " 
                   << std::setw(12) << std::fixed << std::setprecision(4) << output[t] << std::endl;
     }
-    if (output.size() > 20) {
-        std::cout << "  ... [показано 20 шагов из " << output.size() << "]" << std::endl;
+    if (output.size() > 100) {
+        std::cout << "  ... [показано 100 шагов из " << output.size() << "]" << std::endl;
     }
     std::cout << "Сохранено в файл: " << filename << std::endl;
 }
