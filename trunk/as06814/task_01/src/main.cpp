@@ -5,7 +5,7 @@
 #include <string>
 #include <algorithm>
 #include <iomanip>
-#include <memory>
+#include <stdexcept>
 #include "models.h"
 
 std::vector<double> generateInputSignal(int type, int steps) {
@@ -47,14 +47,14 @@ void printAndSaveCSV(Model& model, const std::string& filename, const std::strin
               << std::setw(12) << "Output" << std::endl;
     std::cout << "------------------------------------------" << std::endl;
 
-    size_t print_limit = std::min(output.size(), static_cast<size_t>(100));
+    size_t print_limit = std::min(output.size(), static_cast<size_t>(20));
     for (size_t t = 0; t < print_limit; ++t) {
         std::cout << std::setw(8) << t << " | " 
                   << std::setw(10) << std::fixed << std::setprecision(4) << input[t] << " | " 
                   << std::setw(12) << std::fixed << std::setprecision(4) << output[t] << std::endl;
     }
-    if (output.size() > 100) {
-        std::cout << "  ... [показано 100 шагов из " << output.size() << "]" << std::endl;
+    if (output.size() > 20) {
+        std::cout << "  ... [показано 20 шагов из " << output.size() << "]" << std::endl;
     }
     std::cout << "Сохранено в файл: " << filename << std::endl;
 }
@@ -68,62 +68,90 @@ double getDoubleInput(const std::string& prompt, double default_val) {
     }
     try {
         return std::stod(line);
-    } catch (...) {
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Некорректный ввод, используем значение по умолчанию: " << e.what() << std::endl;
+        return default_val;
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Число вне диапазона, используем значение по умолчанию: " << e.what() << std::endl;
         return default_val;
     }
 }
 
-int main(int argc, char* argv[]) {
+int parseSteps(int argc, char* argv[]) {
     int parsed_steps = 100;
     if (argc > 1) {
         try {
             parsed_steps = std::stoi(argv[1]);
-        } catch (...) {
+        } catch (const std::exception& e) {
+            std::cerr << "Ошибка аргумента командной строки: " << e.what() << std::endl;
             parsed_steps = 100;
         }
-    }
-
-    int model_choice = 4;
-    int signal_choice = 4;
-
-    if (argc <= 1) {
-        std::cout << "=== Настройка параметров симуляции ===\n" << std::endl;
-
+    } else {
         std::cout << "Количество шагов симуляции (n) [по умолчанию 100]: ";
         std::string input_str;
         std::getline(std::cin, input_str);
         if (!input_str.empty()) {
-            try { parsed_steps = std::stoi(input_str); } catch (...) {}
+            try {
+                parsed_steps = std::stoi(input_str);
+            } catch (const std::exception& e) {
+                std::cerr << "Некорректный ввод шагов, используем 100: " << e.what() << std::endl;
+                parsed_steps = 100;
+            }
         }
+    }
+    return std::clamp(parsed_steps, 1, 10000);
+}
 
-        std::cout << "\nВыберите модель:\n"
-                  << "1. Линейная модель (LinearModel1_4)\n"
-                  << "2. Нелинейная модель (NonlinearModel2_8)\n"
-                  << "3. Дифференциальная модель (DiffModel3_2)\n"
-                  << "4. Все модели (по умолчанию)\n"
-                  << "Ваш выбор [1-4]: ";
-        std::getline(std::cin, input_str);
-        if (!input_str.empty()) {
-            try { model_choice = std::stoi(input_str); } catch (...) {}
-        }
-
-        std::cout << "\nВыберите входное воздействие:\n"
-                  << "1. Ступенчатое (Step)\n"
-                  << "2. Импульсное (Impulse)\n"
-                  << "3. Гармоническое (Harmonic)\n"
-                  << "4. Все воздействия (по умолчанию)\n"
-                  << "Ваш выбор [1-4]: ";
-        std::getline(std::cin, input_str);
-        if (!input_str.empty()) {
-            try { signal_choice = std::stoi(input_str); } catch (...) {}
+void selectOptions(int& model_choice, int& signal_choice) {
+    std::cout << "\nВыберите модель:\n"
+              << "1. Линейная модель (LinearModel1_4)\n"
+              << "2. Нелинейная модель (NonlinearModel2_8)\n"
+              << "3. Дифференциальная модель (DiffModel3_2)\n"
+              << "4. Все модели (по умолчанию)\n"
+              << "Ваш выбор [1-4]: ";
+    std::string input_str;
+    std::getline(std::cin, input_str);
+    if (!input_str.empty()) {
+        try {
+            model_choice = std::stoi(input_str);
+        } catch (const std::exception& e) {
+            std::cerr << "Ошибка выбора модели: " << e.what() << std::endl;
         }
     }
 
-    const int steps = std::clamp(parsed_steps, 1, 10000);
+    std::cout << "\nВыберите входное воздействие:\n"
+              << "1. Ступенчатое (Step)\n"
+              << "2. Импульсное (Impulse)\n"
+              << "3. Гармоническое (Harmonic)\n"
+              << "4. Все воздействия (по умолчанию)\n"
+              << "Ваш выбор [1-4]: ";
+    std::getline(std::cin, input_str);
+    if (!input_str.empty()) {
+        try {
+            signal_choice = std::stoi(input_str);
+        } catch (const std::exception& e) {
+            std::cerr << "Ошибка выбора сигнала: " << e.what() << std::endl;
+        }
+    }
+}
 
-    double lin_a = 0.8, lin_b = 0.2;
-    double nonlin_a = 0.5, nonlin_b = 0.3, nonlin_c = 0.1;
-    double diff_b = 0.5, diff_dt = 0.1;
+int main(int argc, char* argv[]) {
+    int model_choice = 4;
+    int signal_choice = 4;
+
+    int steps = parseSteps(argc, argv);
+
+    if (argc <= 1) {
+        selectOptions(model_choice, signal_choice);
+    }
+
+    double lin_a = 0.8;
+    double lin_b = 0.2;
+    double nonlin_a = 0.5;
+    double nonlin_b = 0.3;
+    double nonlin_c = 0.1;
+    double diff_b = 0.5;
+    double diff_dt = 0.1;
 
     if (argc <= 1) {
         std::cout << "\n--- Настройка коэффициентов моделей ---" << std::endl;
