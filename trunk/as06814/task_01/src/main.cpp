@@ -82,8 +82,11 @@ int parseSteps(int argc, char* argv[]) {
     if (argc > 1) {
         try {
             parsed_steps = std::stoi(argv[1]);
-        } catch (const std::exception& e) {
+        } catch (const std::invalid_argument& e) {
             std::cerr << "Ошибка аргумента командной строки: " << e.what() << std::endl;
+            parsed_steps = 100;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Число вне диапазона: " << e.what() << std::endl;
             parsed_steps = 100;
         }
     } else {
@@ -93,8 +96,11 @@ int parseSteps(int argc, char* argv[]) {
         if (!input_str.empty()) {
             try {
                 parsed_steps = std::stoi(input_str);
-            } catch (const std::exception& e) {
+            } catch (const std::invalid_argument& e) {
                 std::cerr << "Некорректный ввод шагов, используем 100: " << e.what() << std::endl;
+                parsed_steps = 100;
+            } catch (const std::out_of_range& e) {
+                std::cerr << "Число вне диапазона шагов, используем 100: " << e.what() << std::endl;
                 parsed_steps = 100;
             }
         }
@@ -114,8 +120,10 @@ void selectOptions(int& model_choice, int& signal_choice) {
     if (!input_str.empty()) {
         try {
             model_choice = std::stoi(input_str);
-        } catch (const std::exception& e) {
+        } catch (const std::invalid_argument& e) {
             std::cerr << "Ошибка выбора модели: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Значение выбора модели вне диапазона: " << e.what() << std::endl;
         }
     }
 
@@ -129,8 +137,10 @@ void selectOptions(int& model_choice, int& signal_choice) {
     if (!input_str.empty()) {
         try {
             signal_choice = std::stoi(input_str);
-        } catch (const std::exception& e) {
+        } catch (const std::invalid_argument& e) {
             std::cerr << "Ошибка выбора сигнала: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Значение выбора сигнала вне диапазона: " << e.what() << std::endl;
         }
     }
 }
