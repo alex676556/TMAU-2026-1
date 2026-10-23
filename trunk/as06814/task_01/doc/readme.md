@@ -45,15 +45,6 @@ $$\frac{dy}{dt} = b \cdot u \implies y_{\tau+1} = y_{\tau} + \Delta t \cdot b \c
 2. Импульсное (Impulse): $u_0 = 1, u_{\tau > 0} = 0$
 3. Гармоническое (Harmonic): $u_{\tau} = \sin(\tau)$
 
-## ООП Архитектура
-
-Создан абстрактный базовый класс `Model` с чистыми виртуальными методами `calculateNext()` и `reset()`, а также виртуальным методом `simulate()`.
-
-От базового класса наследуются:
-- `LinearModel1_4`
-- `NonlinearModel2_8`
-- `DiffModel3_2`
-
 ## Результаты моделирования
 
 ### 1. Линейная модель (Model 1.4)
@@ -92,6 +83,15 @@ $$\frac{dy}{dt} = b \cdot u \implies y_{\tau+1} = y_{\tau} + \Delta t \cdot b \c
 
 #### 3.3 Гармоническое воздействие
 ![Diff Model - Harmonic](diff_harmonic.png)
+
+## ООП Архитектура
+
+Создан абстрактный базовый класс `Model` с чистыми виртуальными методами `calculateNext()` и `reset()`, а также виртуальным методом `simulate()`.
+
+От базового класса наследуются:
+- `LinearModel1_4`
+- `NonlinearModel2_8`
+- `DiffModel3_2`
 
 ## UML Диаграмма классов
 
