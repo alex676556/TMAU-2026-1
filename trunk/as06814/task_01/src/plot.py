@@ -4,13 +4,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def main():
-    csv_files = glob.glob("build/*.csv")
+    csv_files = glob.glob("*.csv") + glob.glob("build/*.csv")
     
     if not csv_files:
-        print("CSV файлы не найдены! Сначала запустите task_01.exe")
+        print("CSV файлы не найдены! Сначала запустите симуляцию C++")
         return
-        
-    print(f"Обработка файлов: {csv_files}")
 
     doc_dir = os.path.join("..", "doc")
     os.makedirs(doc_dir, exist_ok=True)
@@ -62,7 +60,7 @@ def main():
         title_model = model_names.get(model, model.capitalize())
         title_signal = signal_names.get(signal_type, signal_type.capitalize())
         
-        plt.title(f"Simulation: {title_model} - {title_signal} (Variant 14)")
+        plt.title(f"Simulation: {title_model} - {title_signal}")
         plt.xlabel("Time step (t)")
         plt.ylabel("Value")
         plt.grid(True, linestyle="--", alpha=0.7)
@@ -72,7 +70,7 @@ def main():
         plt.savefig(output_img, dpi=300)
         print(f"График сохранен: {output_img}")
         
-        plt.close()
+        plt.show()
 
 if __name__ == "__main__":
     main()
